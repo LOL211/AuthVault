@@ -17,7 +17,7 @@ public class PublicKeyController
     private RSAPublicKey publicKey;
 
     @GetMapping
-    public ResponseEntity<String> getPublicKey() throws Exception
+    public ResponseEntity<String> getPublicKey()
     {
         byte[] encoded = publicKey.getEncoded();
         String base64Key = Base64.encode(encoded).toString();

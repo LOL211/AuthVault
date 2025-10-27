@@ -19,7 +19,7 @@ public class ClientIdFilter extends OncePerRequestFilter
     private final ClientRepository clientRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
     {
         String clientId = request.getHeader("client_id");
         if (StringUtils.isNotBlank(clientId))
