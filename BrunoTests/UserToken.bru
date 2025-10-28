@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: http://localhost:8080/api/register
+  url: http://localhost:8080/api/token
   body: json
   auth: inherit
 }
@@ -16,7 +16,6 @@ headers {
 
 body:json {
   {
-    "username": "kush",
     "email": "kbanbah@yahoo.com",
     "password": "test"
   }
