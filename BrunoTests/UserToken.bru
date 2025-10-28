@@ -1,0 +1,28 @@
+meta {
+  name: UserToken
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:8080/api/register
+  body: json
+  auth: inherit
+}
+
+headers {
+  client_id: test
+}
+
+body:json {
+  {
+    "username": "kush",
+    "email": "kbanbah@yahoo.com",
+    "password": "test"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

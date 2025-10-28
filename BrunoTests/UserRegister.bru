@@ -1,0 +1,20 @@
+meta {
+  name: UserRegister
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:8080/api/public
+  body: none
+  auth: inherit
+}
+
+headers {
+  client_id: test
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
