@@ -31,13 +31,15 @@ public class AuthConfig
 
     @Bean
     @Primary
-    JwtEncoder jwtDecoder(@Value("${jwt.private.key}") RSAPrivateKey privateKey,
+    JwtEncoder jwtEncoder(@Value("${jwt.private.key}") RSAPrivateKey privateKey,
                           @Value("${jwt.public.key}") RSAPublicKey publicKey)
     {
         JWK jwk = new RSAKey.Builder(publicKey).privateKey(privateKey).build();
         JWKSource<SecurityContext> jwkSource = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwkSource);
     }
+
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
