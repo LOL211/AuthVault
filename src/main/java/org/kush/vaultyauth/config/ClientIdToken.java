@@ -1,5 +1,6 @@
 package org.kush.vaultyauth.config;
 
+import lombok.Getter;
 import org.kush.vaultyauth.database.model.ClientDto;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 
 public class ClientIdToken extends AbstractAuthenticationToken
 {
+    @Getter
     private final ClientDto clientDto;
 
     public ClientIdToken(ClientDto client)
@@ -28,7 +30,7 @@ public class ClientIdToken extends AbstractAuthenticationToken
     @Override
     public Object getPrincipal()
     {
-        return clientDto;
+        return clientDto.clientId();
     }
 
     @Override

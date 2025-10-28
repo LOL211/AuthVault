@@ -6,6 +6,7 @@ import org.kush.vaultyauth.controller.dto.TokenRequestDto;
 import org.kush.vaultyauth.database.model.User;
 import org.kush.vaultyauth.database.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -22,6 +23,7 @@ public class TokenService
     @Value("${spring.application.name}")
     private String appName;
     private final static long expiryInSeconds = 600;
+    private final PasswordEncoder passwordEncoder;
 
     public String generateToken(ClientIdToken client, TokenRequestDto tokenRequestDto)
     {
@@ -30,7 +32,7 @@ public class TokenService
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!user.getPassword().equals(tokenRequestDto.password()))
+        if (!passwordEncoder.matches(tokenRequestDto.password(), user.getPassword()))
         {
             throw new RuntimeException("Invalid password");
         }
@@ -38,9 +40,9 @@ public class TokenService
         var now = Instant.now();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("VaultyAuth")
+                .issuer(appName)
                 .subject(user.getEmail())
-                .claim("scope", client.getAuthorities().stream().map(Object::toString).reduce((String str, String joined) -> joined + ";" + str))
+                .claim("scope", client.getClientDto().scopes())
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiryInSeconds))
                 .build();

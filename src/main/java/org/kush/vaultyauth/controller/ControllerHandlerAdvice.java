@@ -1,8 +1,10 @@
 package org.kush.vaultyauth.controller;
 
-import jakarta.validation.ValidationException;
+import org.kush.vaultyauth.controller.dto.ErrorDto;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -10,16 +12,24 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ControllerHandlerAdvice
 {
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception ex)
+    public ResponseEntity<ErrorDto> handleException(Exception ex)
     {
-        var ex2 = ex.getCause();
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex2 == null ? ex.getMessage() : ex2.getMessage());
+        ErrorDto dto = new ErrorDto(ex.getMessage(), ex.getClass().toString());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(dto);
     }
 
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<String> handleValidationException(ValidationException ex)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorDto> handleValidationException(MethodArgumentNotValidException ex)
     {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorDto(ex.getMessage(), ex.getClass().toString()));
     }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorDto> handleSqlError(DataIntegrityViolationException ex)
+    {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorDto("Internal Server Error when saving", "DB error"));
+    }
+
 }

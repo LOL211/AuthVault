@@ -5,10 +5,10 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-5.0.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
-    <changeSet id="1761583929076-1" author="kbanb">
-        <createSequence incrementBy="50" sequenceName="user_seq" startValue="1"/>
+    <changeSet id="1761662757320-1" author="kbanb">
+        <createSequence incrementBy="50" sequenceName="user_list_seq" startValue="1"/>
     </changeSet>
-    <changeSet id="1761583929076-2" author="kbanb">
+    <changeSet id="1761662757320-2" author="kbanb">
         <createTable tableName="client">
             <column name="client_id" type="VARCHAR(255)">
                 <constraints primaryKey="true" primaryKeyName="pk_client"/>
@@ -18,10 +18,10 @@
             <column name="client_name" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1761583929076-3" author="kbanb">
-        <createTable tableName="user">
+    <changeSet id="1761662757320-3" author="kbanb">
+        <createTable tableName="user_list">
             <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user_list"/>
             </column>
             <column name="username" type="VARCHAR(255)"/>
             <column name="email" type="VARCHAR(255)"/>
@@ -29,18 +29,19 @@
             <column name="client_id" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1761583929076-4" author="kbanb">
+    <changeSet id="1761662757320-4" author="kbanb">
         <addUniqueConstraint columnNames="client_name" constraintName="uc_client_clientname" tableName="client"/>
     </changeSet>
-    <changeSet id="1761583929076-5" author="kbanb">
-        <addUniqueConstraint columnNames="email" constraintName="uc_user_email" tableName="user"/>
+    <changeSet id="1761662757320-5" author="kbanb">
+        <addUniqueConstraint columnNames="email" constraintName="uc_user_list_email" tableName="user_list"/>
     </changeSet>
-    <changeSet id="1761583929076-6" author="kbanb">
-        <addUniqueConstraint columnNames="username" constraintName="uc_user_username" tableName="user"/>
+    <changeSet id="1761662757320-6" author="kbanb">
+        <addUniqueConstraint columnNames="username" constraintName="uc_user_list_username" tableName="user_list"/>
     </changeSet>
-    <changeSet id="1761583929076-7" author="kbanb">
-        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="user" constraintName="FK_USER_ON_CLIENT"
-                                 referencedColumnNames="client_id" referencedTableName="client"/>
+    <changeSet id="1761662757320-7" author="kbanb">
+        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="user_list"
+                                 constraintName="FK_USER_LIST_ON_CLIENT" referencedColumnNames="client_id"
+                                 referencedTableName="client"/>
     </changeSet>
 
 </databaseChangeLog>
