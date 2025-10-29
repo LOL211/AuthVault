@@ -23,11 +23,6 @@ jobs:
       - name: Give gradle permissions
         run: chmod +x gradlew
 
-      - name: Create key files
-        run: |
-          echo ${{ secrets.PRIVATE_KEY }} > src/main/resources/private_key.pem
-          echo ${{ secrets.PUBLIC_KEY }} > src/main/resources/public.pub
-
       - name: Build with Gradle
         run: ./gradlew build
 
@@ -49,3 +44,5 @@ jobs:
             "DB_URL"=${{ secrets.DB_URL}}"
             "DB_PASSWORD"=${{ secrets.DB_PASSWORD}}}"
             "DB_USERNAME"=${{ secrets.DB_USERNAME}}"
+            "PRIVATE_KEY"=${{ secrets.PRIVATE_KEY}}"
+            "PUBLIC_KEY"=${{ secrets.PUBLIC_KEY}}"
