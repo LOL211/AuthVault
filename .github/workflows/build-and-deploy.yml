@@ -23,6 +23,11 @@ jobs:
       - name: Give gradle permissions
         run: chmod +x gradlew
 
+      - name: Create key files
+        run: |
+          echo ${{ secrets.PRIVATE_KEY }} > src/main/resources/private_key.pem
+          echo ${{ secrets.PUBLIC_KEY }} > src/main/resources/public.pub
+
       - name: Build with Gradle
         run: ./gradlew build
 
