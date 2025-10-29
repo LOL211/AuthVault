@@ -25,6 +25,9 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY}}
+          PUBLIC_KEY: ${{ secrets.PUBLIC_KEY}}
 
       - name: Test with Gradle
         run: ./gradlew test
