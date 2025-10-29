@@ -49,11 +49,10 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
+          context: .
           push: true
-          tags: kush-banbah/togo:latest
-          secrets: |
-            "DB_URL"=${{ secrets.DB_URL}}"
-            "DB_PASSWORD"=${{ secrets.DB_PASSWORD}}}"
-            "DB_USERNAME"=${{ secrets.DB_USERNAME}}"
-            "PRIVATE_KEY"=${{ secrets.PRIVATE_KEY}}"
-            "PUBLIC_KEY"=${{ secrets.PUBLIC_KEY}}"
+          tags: kushb/togo:latest
+          build-args: |
+            DB_URL=${{ secrets.DB_URL}}"
+            DB_PASSWORD=${{ secrets.DB_PASSWORD}}}"
+            DB_USERNAME=${{ secrets.DB_USERNAME}}"
