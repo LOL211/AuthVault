@@ -1,4 +1,4 @@
-FROM openjdk:25-jdk-alpine
+FROM openjdk:25-jdk
 LABEL authors="kbanb"
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
