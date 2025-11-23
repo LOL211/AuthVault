@@ -2,10 +2,8 @@ package org.kush.vaultyauth.controller.token;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.NotImplementedException;
 import org.kush.vaultyauth.config.ClientIdToken;
 import org.kush.vaultyauth.controller.dto.TokenRequestDto;
-import org.kush.vaultyauth.database.model.Client;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
