@@ -8,6 +8,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
 import org.kush.vaultyauth.database.repository.ClientRepository;
+import org.kush.vaultyauth.database.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,10 @@ import java.security.interfaces.RSAPublicKey;
 public class AuthConfig
 {
     private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
+
+    @Value("${jwt.public.key}")
+    RSAPublicKey publicKey;
 
     @Bean
     @Primary
@@ -41,16 +46,26 @@ public class AuthConfig
         return new NimbusJwtEncoder(jwkSource);
     }
 
-
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain tokenIdFilter(HttpSecurity http) throws Exception {
         http
+                .securityMatcher("/api/user/**")
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .addFilterBefore(new ClientIdFilter(clientRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new TokenFilter(userRepository, publicKey), UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    @Bean
+    SecurityFilterChain otherChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .addFilterBefore(new ClientIdFilter(clientRepository), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.kush.vaultyauth.database.model.Client;
 import org.kush.vaultyauth.database.model.ClientDto;
 import org.kush.vaultyauth.database.repository.ClientRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,14 +23,25 @@ public class ClientIdFilter extends OncePerRequestFilter
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
     {
         String clientId = request.getHeader("client_id");
-        if (StringUtils.isNotBlank(clientId))
+        if (StringUtils.isBlank(clientId))
         {
-            clientRepository.findClientByClientId(clientId).ifPresent(client -> {
-                ClientDto clientDto = new ClientDto(client.getClientId(), client.getScopes(), client.getClientName());
-                SecurityContextHolder.getContext().setAuthentication(new ClientIdToken(clientDto));
-            });
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("No client id found");
+            return;
         }
 
+        Client client = clientRepository.findClientByClientId(clientId).orElse(null);
+
+        if (client == null)
+        {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("invalid client id");
+            return;
+        }
+
+
+        ClientDto clientDto = new ClientDto(client.getClientId(), client.getScopes(), client.getClientName());
+        SecurityContextHolder.getContext().setAuthentication(new ClientIdToken(clientDto));
         filterChain.doFilter(request, response);
     }
 }
