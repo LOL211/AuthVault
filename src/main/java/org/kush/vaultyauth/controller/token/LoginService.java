@@ -16,7 +16,7 @@ import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
-public class TokenService
+public class LoginService
 {
     private final JwtEncoder jwtEncoder;
     private final UserRepository userRepository;

@@ -25,7 +25,7 @@ public class TestRunner implements CommandLineRunner
         Client client = new Client();
         client.setClientId("test");
         client.setClientName("testClient");
-        client.setScopes("scope1;scope2");
+        client.setScopes("api.share.app;scope2");
         clientRepository.save(client);
 
         User u = new User();

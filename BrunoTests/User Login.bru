@@ -1,11 +1,11 @@
 meta {
-  name: UserToken
+  name: User Login
   type: http
   seq: 5
 }
 
 post {
-  url: http://localhost:8080/api/token
+  url: http://localhost:8080/api/login
   body: json
   auth: inherit
 }
@@ -16,8 +16,8 @@ headers {
 
 body:json {
   {
-    "email": "kbanbah@yahoo.com",
-    "password": "test"
+    "email": "fakeEmail@yahoo.com",
+    "password": "password"
   }
 }
 

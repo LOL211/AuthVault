@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.kush.vaultyauth.config.ClientIdToken;
 import org.kush.vaultyauth.controller.dto.TokenRequestDto;
 import org.kush.vaultyauth.controller.dto.UserRegisterRequest;
-import org.kush.vaultyauth.controller.token.TokenService;
+import org.kush.vaultyauth.controller.token.LoginService;
 import org.kush.vaultyauth.database.model.Client;
 import org.kush.vaultyauth.database.model.User;
 import org.kush.vaultyauth.database.repository.ClientRepository;
@@ -18,7 +18,7 @@ public class RegisterService
 {
     private final UserRepository userRepository;
     private final ClientRepository clientRepository;
-    private final TokenService tokenService;
+    private final LoginService loginService;
     private final PasswordEncoder passwordEncoder;
 
     public String register(UserRegisterRequest userRegisterRequest, ClientIdToken principal)
@@ -38,6 +38,6 @@ public class RegisterService
 
         userRepository.save(u);
         TokenRequestDto tokenRequestDto = new TokenRequestDto(u.getEmail(), userRegisterRequest.password());
-        return tokenService.generateToken(principal, tokenRequestDto);
+        return loginService.generateToken(principal, tokenRequestDto);
     }
 }
