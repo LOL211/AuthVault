@@ -19,8 +19,7 @@ public class RegisterController
     private final RegisterService registerService;
 
     @PostMapping
-    private ResponseEntity<String> register(@RequestBody @Valid UserRegisterRequest userRegisterRequest, Authentication principal)
-    {
+    private ResponseEntity<String> register(@RequestBody @Valid UserRegisterRequest userRegisterRequest, Authentication principal) throws Exception {
         return ResponseEntity.ok(registerService.register(userRegisterRequest, (ClientIdToken) principal));
     }
 }

@@ -6,13 +6,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Entity
 @Data
 @Table(name = "client")
 public class Client
 {
     @Id
-    private String clientId;
+    private UUID clientId;
 
     @Column
     private String scopes;

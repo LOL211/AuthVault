@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.kush.vaultyauth.database.model.Client;
 import org.kush.vaultyauth.database.model.User;
 import org.kush.vaultyauth.database.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Instant;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class TokenFilter extends OncePerRequestFilter
@@ -49,14 +51,25 @@ public class TokenFilter extends OncePerRequestFilter
             return;
         }
 
-        User user = userRepository.findByEmail(decodedToken.getSubject()).orElse(null);
+        User user = userRepository.findById(UUID.fromString(decodedToken.getSubject())).orElse(null);
+
 
         if (user == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("User not found");
             return;
         }
-        SecurityContextHolder.getContext().setAuthentication(new UserToken(user));
+        var clients = userRepository.findALlClientsOfAUser(user.getId());
+        var clientId = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if ( clients.stream().map(Client::getClientId)
+                .noneMatch(uuid -> uuid.equals(clientId)))
+        {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("User not authorized for this client id");
+            return;
+        }
+
+        SecurityContextHolder.getContext().setAuthentication(new UserToken(user, SecurityContextHolder.getContext().getAuthentication()));
         filterChain.doFilter(request, response);
     }
 

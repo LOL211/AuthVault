@@ -1,9 +1,9 @@
-package org.kush.vaultyauth.controller.token;
+package org.kush.vaultyauth.controller.login;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.kush.vaultyauth.config.ClientIdToken;
-import org.kush.vaultyauth.controller.dto.TokenRequestDto;
+import org.kush.vaultyauth.controller.dto.RegisterRequestDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +18,8 @@ public class LoginController
 {
     private final LoginService loginService;
     @PostMapping
-    public ResponseEntity<String> createToken(@Valid @RequestBody TokenRequestDto token,
-                                              Authentication authentication)
-    {
+    public ResponseEntity<String> createToken(@Valid @RequestBody RegisterRequestDto token,
+                                              Authentication authentication) throws Exception {
         return ResponseEntity.ok(loginService.generateToken((ClientIdToken) authentication, token));
     }
 }

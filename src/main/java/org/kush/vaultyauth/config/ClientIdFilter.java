@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class ClientIdFilter extends OncePerRequestFilter
@@ -30,7 +31,7 @@ public class ClientIdFilter extends OncePerRequestFilter
             return;
         }
 
-        Client client = clientRepository.findClientByClientId(clientId).orElse(null);
+        Client client = clientRepository.findClientByClientId(UUID.fromString(clientId)).orElse(null);
 
         if (client == null)
         {
