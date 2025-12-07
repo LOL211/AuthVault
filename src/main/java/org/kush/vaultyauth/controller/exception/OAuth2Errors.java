@@ -1,4 +1,4 @@
-package org.kush.vaultyauth.controller;
+package org.kush.vaultyauth.controller.exception;
 
 public enum OAuth2Errors{
     invalid_request,

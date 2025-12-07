@@ -1,10 +1,10 @@
-package org.kush.vaultyauth.controller.login;
+package org.kush.vaultyauth.controller.token;
 
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
-import org.kush.vaultyauth.controller.OAuth2Errors;
-import org.kush.vaultyauth.controller.OAuthException;
 import org.kush.vaultyauth.controller.dto.OAuthTokenResponse;
+import org.kush.vaultyauth.controller.exception.OAuth2Errors;
+import org.kush.vaultyauth.controller.exception.OAuthException;
 import org.kush.vaultyauth.database.model.Client;
 import org.kush.vaultyauth.database.model.User;
 import org.kush.vaultyauth.database.repository.ClientRepository;

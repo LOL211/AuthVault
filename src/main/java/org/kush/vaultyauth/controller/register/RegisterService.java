@@ -3,7 +3,7 @@ package org.kush.vaultyauth.controller.register;
 import lombok.RequiredArgsConstructor;
 import org.kush.vaultyauth.config.ClientIdToken;
 import org.kush.vaultyauth.controller.dto.UserRegisterRequest;
-import org.kush.vaultyauth.controller.login.LoginService;
+import org.kush.vaultyauth.controller.token.LoginService;
 import org.kush.vaultyauth.database.model.Client;
 import org.kush.vaultyauth.database.model.User;
 import org.kush.vaultyauth.database.repository.ClientRepository;

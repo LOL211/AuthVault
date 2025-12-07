@@ -1,4 +1,4 @@
-package org.kush.vaultyauth.controller;
+package org.kush.vaultyauth.controller.exception;
 
 import lombok.Getter;
 
