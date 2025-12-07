@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-5.0.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1765120537632-1" author="kbanb">
+        <createTable tableName="client">
+            <column name="client_id" type="UUID">
+                <constraints primaryKey="true" primaryKeyName="pk_client"/>
+            </column>
+            <column name="client_secret" type="VARCHAR(255)"/>
+            <column name="client_name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765120537632-2" author="kbanb">
+        <createTable tableName="client_scopes">
+            <column name="client_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scope" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765120537632-3" author="kbanb">
+        <createTable tableName="users">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users"/>
+            </column>
+            <column name="username" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="client_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765120537632-4" author="kbanb">
+        <addUniqueConstraint columnNames="client_name" constraintName="uc_client_clientname" tableName="client"/>
+    </changeSet>
+    <changeSet id="1765120537632-5" author="kbanb">
+        <addUniqueConstraint columnNames="email" constraintName="uc_users_email" tableName="users"/>
+    </changeSet>
+    <changeSet id="1765120537632-6" author="kbanb">
+        <addUniqueConstraint columnNames="username" constraintName="uc_users_username" tableName="users"/>
+    </changeSet>
+    <changeSet id="1765120537632-7" author="kbanb">
+        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="users" constraintName="FK_USERS_ON_CLIENT"
+                                 referencedColumnNames="client_id" referencedTableName="client"/>
+    </changeSet>
+    <changeSet id="1765120537632-8" author="kbanb">
+        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="client_scopes"
+                                 constraintName="fk_client_scopes_on_client" referencedColumnNames="client_id"
+                                 referencedTableName="client"/>
+    </changeSet>
+
+    <changeSet id="1765117390626-9" author="kbanb">
+        <insert tableName="client">
+            <column name="client_id" value="a1c2049a-8850-4cbc-aae3-b4a3b0d7e078"/>
+            <column name="client_name" value="shareAppFlutter"/>
+        </insert>
+
+        <insert tableName="client_scopes">
+            <column name="client_id" value="a1c2049a-8850-4cbc-aae3-b4a3b0d7e078"/>
+            <column name="scope" value="api.share.app"/>
+        </insert>
+        <insert tableName="users">
+            <column name="id" value="013c8519-f04e-46d0-9c8c-9be9a8dae3a8"/>
+            <column name="username" value="test"/>
+            <column name="email" value="fakeEmail@yahoo.com"/>
+            <column name="password" value="$2a$10$2VlhPXPzNHtLQi5Ujdze7Og8YRpR7bbcM2dwVdbs0sXldj/RzVyte"/>
+            <column name="client_id" value="a1c2049a-8850-4cbc-aae3-b4a3b0d7e078"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

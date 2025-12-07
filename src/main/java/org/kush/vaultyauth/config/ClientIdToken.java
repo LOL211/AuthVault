@@ -6,7 +6,6 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.security.auth.Subject;
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class ClientIdToken extends AbstractAuthenticationToken
@@ -16,7 +15,7 @@ public class ClientIdToken extends AbstractAuthenticationToken
 
     public ClientIdToken(ClientDto client)
     {
-        super(Arrays.stream(client.scopes().split(" ")).map(SimpleGrantedAuthority::new).collect(Collectors.toSet()));
+        super(client.scopes().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet()));
         this.clientDto = client;
         setAuthenticated(true);
     }

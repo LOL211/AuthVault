@@ -1,9 +1,10 @@
 package org.kush.vaultyauth.database.model;
 
+import java.util.Set;
 import java.util.UUID;
 
 public record ClientDto(
         UUID clientId,
-        String scopes,
+        Set<String> scopes,
         String clientName
 ){}

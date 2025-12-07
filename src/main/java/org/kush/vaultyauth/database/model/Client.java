@@ -1,11 +1,9 @@
 package org.kush.vaultyauth.database.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -16,13 +14,14 @@ public class Client
     @Id
     private UUID clientId;
 
-    @Column
-    private String scopes;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "client_scopes", joinColumns = @JoinColumn(name = "client_id"))
+    @Column(name = "scope")
+    private Set<String> scopes;
 
     @Column
     private String clientSecret;
 
     @Column(unique = true)
     private String clientName;
-
 }

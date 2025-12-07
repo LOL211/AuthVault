@@ -1,6 +1,7 @@
 package org.kush.vaultyauth.controller;
 
 import org.kush.vaultyauth.controller.dto.ErrorDto;
+import org.kush.vaultyauth.controller.dto.OAuthErrorDto;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,13 @@ public class ControllerHandlerAdvice
     {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorDto("Internal Server Error when saving", "DB error"));
+    }
+
+    @ExceptionHandler(OAuthException.class)
+    public ResponseEntity<OAuthErrorDto> handleOAuthError(OAuthException ex)
+    {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new OAuthErrorDto(ex.getMessage()));
     }
 
 }

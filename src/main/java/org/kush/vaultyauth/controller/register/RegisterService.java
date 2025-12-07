@@ -2,7 +2,6 @@ package org.kush.vaultyauth.controller.register;
 
 import lombok.RequiredArgsConstructor;
 import org.kush.vaultyauth.config.ClientIdToken;
-import org.kush.vaultyauth.controller.dto.RegisterRequestDto;
 import org.kush.vaultyauth.controller.dto.UserRegisterRequest;
 import org.kush.vaultyauth.controller.login.LoginService;
 import org.kush.vaultyauth.database.model.Client;
@@ -12,7 +11,6 @@ import org.kush.vaultyauth.database.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -24,8 +22,8 @@ public class RegisterService
     private final LoginService loginService;
     private final PasswordEncoder passwordEncoder;
 
-    public String register(UserRegisterRequest userRegisterRequest, ClientIdToken principal) throws Exception {
-        Client client = clientRepository.findClientByClientId(UUID.fromString(principal.getName()))
+    public String register(UserRegisterRequest userRegisterRequest, ClientIdToken clientToken) {
+        Client client = clientRepository.findById(UUID.fromString(clientToken.getName()))
                 .orElseThrow(()->new IllegalArgumentException("Client not found"));
 
         userRepository.findByEmail(userRegisterRequest.email())
@@ -35,11 +33,10 @@ public class RegisterService
                 .username(userRegisterRequest.username())
                 .email(userRegisterRequest.email())
                 .password(passwordEncoder.encode(userRegisterRequest.password()))
-                .clients(Set.of(client))
+                .client(client)
                 .build();
 
-        userRepository.save(u);
-        RegisterRequestDto registerRequestDto = new RegisterRequestDto(u.getEmail(), userRegisterRequest.password());
-        return loginService.generateToken(principal, registerRequestDto);
+        u = userRepository.save(u);
+        return loginService.generateToken(u,  userRegisterRequest.password());
     }
 }

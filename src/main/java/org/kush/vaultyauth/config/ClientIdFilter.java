@@ -31,7 +31,7 @@ public class ClientIdFilter extends OncePerRequestFilter
             return;
         }
 
-        Client client = clientRepository.findClientByClientId(UUID.fromString(clientId)).orElse(null);
+        Client client = clientRepository.findById(UUID.fromString(clientId)).orElse(null);
 
         if (client == null)
         {

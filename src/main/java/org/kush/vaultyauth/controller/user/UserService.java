@@ -1,6 +1,7 @@
 package org.kush.vaultyauth.controller.user;
 
 import lombok.RequiredArgsConstructor;
+import org.kush.vaultyauth.database.model.User;
 import org.kush.vaultyauth.database.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +24,10 @@ public class UserService {
         });
 
         return resultMap;
+    }
+
+    public User getUser(UUID userId)
+    {
+        return userRepository.findById(userId).orElse(null);
     }
 }

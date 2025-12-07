@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.kush.vaultyauth.database.model.Client;
 import org.kush.vaultyauth.database.model.User;
+import org.kush.vaultyauth.database.repository.ClientRepository;
 import org.kush.vaultyauth.database.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -23,6 +24,7 @@ public class TokenFilter extends OncePerRequestFilter
 {
     private final UserRepository userRepository;
     private final RSAPublicKey publicKey;
+    private final ClientRepository clientRepository;
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
@@ -51,26 +53,26 @@ public class TokenFilter extends OncePerRequestFilter
             return;
         }
 
-        User user = userRepository.findById(UUID.fromString(decodedToken.getSubject())).orElse(null);
+        User user = userRepository.findByIdWithClient(UUID.fromString(decodedToken.getSubject())).orElse(null);
 
-
-        if (user == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("User not found");
+        if (user != null) {
+            SecurityContextHolder.getContext().setAuthentication(new UserToken(user.getId(), user.getClient().getScopes()));
+            filterChain.doFilter(request, response);
             return;
         }
-        var clients = userRepository.findALlClientsOfAUser(user.getId());
-        var clientId = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if ( clients.stream().map(Client::getClientId)
-                .noneMatch(uuid -> uuid.equals(clientId)))
+
+        Client client = clientRepository.findById(UUID.fromString(decodedToken.getSubject())).orElse(null);
+
+        if (client != null)
         {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("User not authorized for this client id");
+            SecurityContextHolder.getContext().setAuthentication(new UserToken(client.getClientId(), client.getScopes()));
+            filterChain.doFilter(request, response);
             return;
         }
 
-        SecurityContextHolder.getContext().setAuthentication(new UserToken(user, SecurityContextHolder.getContext().getAuthentication()));
-        filterChain.doFilter(request, response);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write("Id not found");
+
     }
 
 }

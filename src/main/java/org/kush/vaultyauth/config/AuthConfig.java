@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -28,6 +29,7 @@ import java.security.interfaces.RSAPublicKey;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableMethodSecurity()
 public class AuthConfig
 {
     private final ClientRepository clientRepository;
@@ -49,23 +51,28 @@ public class AuthConfig
     @Bean
     SecurityFilterChain tokenIdFilter(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/api/user/**")
+                .securityMatcher(request -> {
+                    String path = request.getRequestURI();
+                    return !path.startsWith("/api/public") && !path.startsWith("/api/register") && !path.startsWith("/api/token");
+                })
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
-                .addFilterBefore(new ClientIdFilter(clientRepository), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new TokenFilter(userRepository, publicKey), UsernamePasswordAuthenticationFilter.class);
+                .formLogin(AbstractHttpConfigurer::disable)
+                .addFilterBefore(new TokenFilter(userRepository, publicKey, clientRepository), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
-    SecurityFilterChain otherChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain clientIdFilter(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/**")
+                .securityMatcher("/api/public")
+                .securityMatcher("/api/register")
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .authorizeHttpRequests(auth ->auth.anyRequest().authenticated())
+                .formLogin(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new ClientIdFilter(clientRepository), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

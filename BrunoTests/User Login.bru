@@ -5,8 +5,8 @@ meta {
 }
 
 post {
-  url: http://localhost:8080/api/login
-  body: json
+  url: http://localhost:8080/api/token
+  body: text
   auth: inherit
 }
 
@@ -15,10 +15,11 @@ headers {
 }
 
 body:json {
-  {
-    "email": "fakeEmail@yahoo.com",
-    "password": "password"
-  }
+  grant_type=password&username=fakeEmail@yahoo.com&password=password
+}
+
+body:text {
+  grant_type=password&username=fakeEmail@yahoo.com&password=password
 }
 
 settings {

@@ -1,0 +1,25 @@
+meta {
+  name: OAuth Client cred
+  type: http
+  seq: 7
+}
+
+post {
+  url: http://localhost:8080/api/token
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Basic NDE2ZmYyM2UtN2Q4ZC00NzFiLWFiMWEtYmZmYjU0YjA5N2IxOmhZd01FRHRSZDJxZlZiUGVCeno=
+  ~client_id: a1c2049a-8850-4cbc-aae3-b4a3b0d7e078
+}
+
+body:json {
+  grant_type=client_credentials
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
