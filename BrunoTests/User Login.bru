@@ -5,13 +5,13 @@ meta {
 }
 
 post {
-  url: http://localhost:8080/api/token
+  url: http://{{URL}}:8080/api/token
   body: text
-  auth: inherit
+  auth: none
 }
 
 headers {
-  client_id: a1c2049a-8850-4cbc-aae3-b4a3b0d7e078
+  ~client_id: a1c2049a-8850-4cbc-aae3-b4a3b0d7e078
 }
 
 body:json {
@@ -19,7 +19,7 @@ body:json {
 }
 
 body:text {
-  grant_type=password&username=fakeEmail@yahoo.com&password=password
+  grant_type=password&username=fakeUser@yahoo.com&password=test
 }
 
 settings {

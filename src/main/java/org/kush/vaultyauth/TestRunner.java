@@ -3,7 +3,6 @@ package org.kush.vaultyauth;
 import lombok.RequiredArgsConstructor;
 import org.kush.vaultyauth.database.model.Client;
 import org.kush.vaultyauth.database.repository.ClientRepository;
-import org.kush.vaultyauth.database.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +17,6 @@ import java.util.UUID;
 public class TestRunner implements CommandLineRunner
 {
     private final ClientRepository clientRepository;
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
