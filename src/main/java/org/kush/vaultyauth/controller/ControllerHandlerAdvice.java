@@ -3,6 +3,7 @@ package org.kush.vaultyauth.controller;
 import org.kush.vaultyauth.controller.dto.ErrorDto;
 import org.kush.vaultyauth.controller.dto.OAuthErrorDto;
 import org.kush.vaultyauth.controller.exception.OAuthException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,15 @@ public class ControllerHandlerAdvice
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorDto> handleValidationException(MethodArgumentNotValidException ex)
     {
+        String errorMessage = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .findFirst()
+                .orElse("Invalid value!");
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorDto(ex.getMessage(), ex.getClass().toString()));
+                .body(new ErrorDto(errorMessage, ex.getClass().toString()));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
